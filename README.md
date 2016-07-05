@@ -1,0 +1,1 @@
+# Configuracion del nodo central
