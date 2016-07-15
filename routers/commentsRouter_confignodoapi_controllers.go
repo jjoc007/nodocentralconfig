@@ -41,6 +41,13 @@ func init() {
 			[]string{"delete"},
 			nil})
 
+	beego.GlobalControllerRouter["confignodoapi/controllers:JwtController"] = append(beego.GlobalControllerRouter["confignodoapi/controllers:JwtController"],
+		beego.ControllerComments{
+			"IssueToken",
+			`/issue-token`,
+			[]string{"get"},
+			nil})
+
 	beego.GlobalControllerRouter["confignodoapi/controllers:ParametroController"] = append(beego.GlobalControllerRouter["confignodoapi/controllers:ParametroController"],
 		beego.ControllerComments{
 			"Post",
