@@ -7,7 +7,11 @@ import (
 	"strconv"
 	"strings"
 
+	"fmt"
+
 	"github.com/astaxie/beego"
+
+	"confignodoapi/configs"
 )
 
 // oprations for Aplicacion
@@ -30,6 +34,9 @@ func (c *AplicacionController) URLMapping() {
 // @Failure 403 body is empty
 // @router / [post]
 func (c *AplicacionController) Post() {
+
+
+
 	var v models.Aplicacion
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if _, err := models.AddAplicacion(&v); err == nil {
@@ -51,14 +58,29 @@ func (c *AplicacionController) Post() {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (c *AplicacionController) GetOne() {
-	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetAplicacionById(id)
-	if err != nil {
-		c.Data["json"] = err.Error()
-	} else {
-		c.Data["json"] = v
+
+	msg, data := configs.ValidateToken(c.Ctx.Input.Header("auth"))
+	fmt.Println("cabecera de autenticacion: "+c.Ctx.Input.Header("auth"))
+
+	if msg.Code == 1 {
+		c.Data["json"] = msg.Message
+		
+		fmt.Println("Error:" + msg.Message)		
+
+	}else{
+
+		fmt.Println(data)
+
+		idStr := c.Ctx.Input.Param(":id")
+		id, _ := strconv.Atoi(idStr)
+		v, err := models.GetAplicacionById(id)
+		if err != nil {
+			c.Data["json"] = err.Error()
+		} else {
+			c.Data["json"] = v
+		}
 	}
+
 	c.ServeJSON()
 }
 

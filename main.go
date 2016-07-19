@@ -6,8 +6,10 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/plugins/cors"
+	//"github.com/astaxie/beego/plugins/cors"
 	_ "github.com/lib/pq"
+
+	"confignodoapi/configs"
 
 	"fmt"
 
@@ -22,6 +24,9 @@ func init() {
 	    fmt.Println(err)
 	}
 
+	//read privateKeyTokenvalidator
+	configs.Init()
+
 }
 
 func main() {
@@ -30,6 +35,7 @@ func main() {
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	}
 
+/*
 
 	//cors
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
@@ -44,7 +50,7 @@ func main() {
  		ExposeHeaders:    []string{"Content-Length"},
  		AllowCredentials: true,
  	}))
-
+*/
 
 	beego.Run()
 }
