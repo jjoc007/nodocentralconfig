@@ -35,16 +35,20 @@ func (c *AplicacionController) URLMapping() {
 // @router / [post]
 func (c *AplicacionController) Post() {
 
-
-
 	var v models.Aplicacion
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+		
+		password:= configs.GenerateKeysHash(v.Password)
+
+		v.Password = password
+
 		if _, err := models.AddAplicacion(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = v
 		} else {
 			c.Data["json"] = err.Error()
 		}
+		
 	} else {
 		c.Data["json"] = err.Error()
 	}

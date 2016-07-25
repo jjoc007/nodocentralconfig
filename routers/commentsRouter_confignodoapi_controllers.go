@@ -64,6 +64,13 @@ func init() {
 
 	beego.GlobalControllerRouter["confignodoapi/controllers:ParametroController"] = append(beego.GlobalControllerRouter["confignodoapi/controllers:ParametroController"],
 		beego.ControllerComments{
+			"GetByAplicacion",
+			`/parametrosByAplicacion/`,
+			[]string{"post"},
+			nil})
+
+	beego.GlobalControllerRouter["confignodoapi/controllers:ParametroController"] = append(beego.GlobalControllerRouter["confignodoapi/controllers:ParametroController"],
+		beego.ControllerComments{
 			"GetAll",
 			`/`,
 			[]string{"get"},

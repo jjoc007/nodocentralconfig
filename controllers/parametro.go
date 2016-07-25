@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego"
+	"confignodoapi/configs"
 )
 
 // oprations for Parametro
@@ -21,6 +22,7 @@ func (c *ParametroController) URLMapping() {
 	c.Mapping("GetAll", c.GetAll)
 	c.Mapping("Put", c.Put)
 	c.Mapping("Delete", c.Delete)
+	c.Mapping("GetByAplicacion", c.GetByAplicacion)
 }
 
 // @Title Post
@@ -60,6 +62,43 @@ func (c *ParametroController) GetOne() {
 		c.Data["json"] = v
 	}
 	c.ServeJSON()
+}
+
+// @Title GetByAplicacion
+// @Description get Parametros by aplicacion
+// @Param	id		path 	string	true		"The id Aplicacion"
+// @Success 200 {object} models.Parametro
+// @Failure 403 
+// @router /parametrosByAplicacion/ [post]
+func (c *ParametroController) GetByAplicacion() {
+
+	var v map[string]interface{}
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+		
+		//validar password del aplicativo
+		valPass, errVal := models.ValidatePasswordAplicacion(int(v["Id"].(float64)),configs.GenerateKeysHash(v["PasswordApp"].(string)))
+		
+		if errVal != nil {
+			c.Data["json"] = errVal.Error()
+		} else {
+			if valPass == false{
+				c.Data["json"] = "Error: Clave o Id del aplicativo incorrecta."
+			}else{
+				l, errGetParams := models.GetParametroByIdAplicacion(int(v["Id"].(float64)))
+				if errGetParams != nil {
+					c.Data["json"] = errGetParams.Error()
+				} else {
+					c.Data["json"] = l
+				}
+			}
+			
+		}
+
+	} else {
+		c.Data["json"] = err.Error()
+	}
+	c.ServeJSON()
+
 }
 
 // @Title Get All

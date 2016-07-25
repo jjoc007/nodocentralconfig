@@ -5,6 +5,11 @@ package configs
 	"confignodoapi/models"
 
 	jwt "github.com/dgrijalva/jwt-go"
+
+	"crypto/sha256"
+	"io"
+	"fmt"
+
 )
  
  var (
@@ -15,7 +20,7 @@ package configs
  	PrivateKey, _ = ioutil.ReadFile("conf/privateKey.txt")
  }
 
- func ValidateToken(tokenString string) (models.MessageReturn, interface{}){
+func ValidateToken(tokenString string) (models.MessageReturn, interface{}){
 
 	tokenVal, errVal := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 	    return PrivateKey, nil
@@ -37,4 +42,14 @@ package configs
 	    return models.GetNewMessage(1, "Error" + ve.Error()), models.SessionData{}
 	}
 
- }
+}
+
+func GenerateKeysHash(password string) (string){
+
+	h := sha256.New()
+	io.WriteString(h,password)
+	fmt.Println(fmt.Sprint(h.Sum(nil)))
+
+	return fmt.Sprint(h.Sum(nil))
+
+}

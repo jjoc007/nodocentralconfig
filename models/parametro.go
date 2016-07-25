@@ -43,6 +43,25 @@ func GetParametroById(id int) (v *Parametro, err error) {
 	return nil, err
 }
 
+// GetParametroById retrieves Parametro by IdAplicacion. Returns error if
+// Id doesn't exist
+func GetParametroByIdAplicacion(idAplicacion int) (ml []interface{}, err error) {
+	var l []Parametro
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(Parametro)).Filter("IdAplicacion__Id",idAplicacion)
+	_, err = qs.All(&l)
+
+	for _, v := range l {
+		ml = append(ml, v)
+	}
+
+	if err == nil {
+		return ml, nil
+	}
+
+	return nil, err
+}
+
 // GetAllParametro retrieves all Parametro matches certain condition. Returns empty list if
 // no records exist
 func GetAllParametro(query map[string]string, fields []string, sortby []string, order []string,

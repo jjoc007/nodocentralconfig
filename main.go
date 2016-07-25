@@ -52,6 +52,6 @@ func main() {
  	}))
 */
 
-	beego.Run()
+	beego.Run(":8081")
 }
 

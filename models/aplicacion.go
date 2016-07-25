@@ -15,6 +15,7 @@ type Aplicacion struct {
 	Descripcion string `orm:"column(descripcion);null"`
 	Dominio     string `orm:"column(dominio);null"`
 	Ip          string `orm:"column(ip);null"`
+	Password    string `orm:"column(password);null"`
 }
 
 func (t *Aplicacion) TableName() string {
@@ -42,6 +43,24 @@ func GetAplicacionById(id int) (v *Aplicacion, err error) {
 		return v, nil
 	}
 	return nil, err
+}
+
+// GetParametroById retrieves Parametro by IdAplicacion. Returns error if
+// Id doesn't exist
+func ValidatePasswordAplicacion(id int, password string) (bool, error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(Aplicacion)).Filter("Id",id).Filter("Password",password)
+	rows, err := qs.Count()
+
+	if err != nil {
+		return false, err
+	}
+
+	if(rows > 0){
+		return true, nil
+	}else{
+		return false, nil
+	}
 }
 
 // GetAllAplicacion retrieves all Aplicacion matches certain condition. Returns empty list if
